@@ -52,7 +52,9 @@ class Human_resources_karyawan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "K".date("ymd"), 2)
+            , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
+            , 'listKota'=>  $this->loadKota() 
+            , 'listPropinsi'=> $this->loadPrinsi()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -64,7 +66,9 @@ class Human_resources_karyawan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_jabatan", "jabatanID", "J-", 3)
+            , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
+            , 'listKota'=>  $this->loadKota() 
+            , 'listPropinsi'=> $this->loadPrinsi()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -98,19 +102,41 @@ class Human_resources_karyawan extends CI_Controller {
         }
     }
 
+    public function loadPrinsi(){
+       return $this->conn->CIT_SELECT('tref_propinsi');
+    }
+    
+    public function loadKota(){
+       return $this->conn->CIT_SELECT('tref_city');
+    }
     public function entry()
     {
         $this->activeModule   = $this->session->userdata('setmodule');
-        $hasil = $this->conn->CIT_INSERT("tref_jabatan", array(
-            "jabatanID" => $_POST["jabatanID"],
-            "jabatanNama" => $_POST["jabatanNama"]
-        ));
-        
-        if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
-        }  else {
+        $propinsiID = $this->conn->CIT_GETSOMETHING("propinsiID", "tref_city", array("kotaID"=>$_POST["kotaID"]));
+        $tLahir = explode("/", $_POST["tanggalLahir"]);
+        $fieldInsert = array(
+            "nip"=>$_POST["nip"]
+            , "noregistrasikaryawan"=>$_POST["noregistrasikaryawan"]
+            , "npwp"=>$_POST["npwp"]
+            , "noKTPSIM"=>$_POST["noKTPSIM"]
+            , "noJamsostek"=>$_POST["noJamsostek"]
+            , "namaLengkap"=>$_POST["namaLengkap"]
+            , "namaPanggilan"=>$_POST["namaPanggilan"]
+            , "tanggalLahir"=>date("Y-m-d", strtotime($_POST["tanggalLahir"]))
+            , "tempatLahir"=>$_POST["tempatLahir"]
+            , "gender"=>$_POST["gender"]
+            , "agama"=>$_POST["agama"]);
+        try{
+            $hasil = $this->conn->CIT_INSERT('tref_karyawan', $fieldInsert);
+            if ($hasil == "1"){
+                redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+            }  else {
+                redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            }
+        }catch(Exception $e){
             redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
         }
+        
     }
     
     public function update()

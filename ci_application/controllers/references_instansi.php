@@ -55,6 +55,9 @@ class References_instansi extends CI_Controller {
        return $this->conn->CIT_SELECT('tref_propinsi');
     }
     
+    public function loadKota(){
+       return $this->conn->CIT_SELECT('tref_city');
+    }
     public function loadByPropinsi(){
        $sql = $this->conn->CIT_SELECT('tref_city','equal', array('propinsiID'=>$_POST["propinsiID"]));
        $result = "";
@@ -65,9 +68,6 @@ class References_instansi extends CI_Controller {
        echo json_encode($result);
     }
     
-    public function loadKota(){
-       return $this->conn->CIT_SELECT('tref_city');
-    }
 
     function loadDefaultKota(){
        $rKota       = $this->conn->CIT_SELECT('tref_city');

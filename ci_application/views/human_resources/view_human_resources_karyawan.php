@@ -36,8 +36,8 @@
             <div class="box-head tabs">
                 <h3>FORM INPUT</h3>
             	<ul class="nav nav-tabs">
-					<li class='active'><a href="#0" data-toggle="tab">Active Tab</a></li>
-					<li><a href="#1" data-toggle="tab">Inctive Tab</a></li>
+					<li class='active'><a href="#0" data-toggle="tab">Informasi Diri</a></li>
+					<li><a href="#1" data-toggle="tab">Informasi Kontak</a></li>
 					<li><a href="#2" data-toggle="tab">Inctive Tab #2</a></li>
 				</ul>
             </div>
@@ -59,81 +59,153 @@
                     endif;
                 ?>
                 <!-- FORMS  -->
-                <form id="myform" class="form-horizontal" method="post" action="<?php echo site_url($activeModule.'_jabatan/'.$mode); ?>">
-	            	<div class="tab-content">
-						<div class="tab-pane active" id="0">
-							<span class="span6">
-								<div class="control-group">
-			                        <label class="control-label" for="basicround">NIP</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="nip" name="nip"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-			                        <label class="control-label" for="basicround">NPWP</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="npwp" name="npwp"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-			                        <label class="control-label" for="basicround">No. KTP/SIM</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="noKTPSIM" name="noKTPSIM"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-			                        <label class="control-label" for="basicround">No. JAMSOSTEK</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="noJamsostek" name="noJamsostek"/>
-			                        </div>
-			                    </div>
-							</span>
-							<span class="span6">
-								<div class="control-group">
-			                        <label class="control-label" for="basicround">Nama Lengkap</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="namaLengkap" name="namaLengkap"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-			                        <label class="control-label" for="basicround">Nama Panggilan</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="namaPanggilan" name="namaPanggilan"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-			                        <label class="control-label" for="basicround">Nama Panggilan</label>
-			                        <div class="controls">
-			                            <input type="text" class="input-square" id="namaPanggilan" name="namaPanggilan"/>
-			                        </div>
-			                    </div>
-			                    <div class="control-group">
-										<label class="control-label" for="datepicker">Tanggal Lahir</label>
-										<div class="controls">
-											<input type="text" class="datepick" id="tanggalLahir" name="tanggalLahir">
-										</div>
-									</div>
-									<div class="control-group">
-                                <label for="select" class="control-label">Tempat Lahir (Kota)</label>
-                                <div class="controls">
-                                    <select name="kotaID" id="kotaID">
-                                        <option value="*" selected>Pilih Kota</option>
-                                        <?php 
-                                        $conn = new Citdbase();
-                                        $listKota = $conn->CIT_SELECT("tref_city");
-                                        foreach ($listKota as $r): 
-                                        ?>
-                                            <option value="<?php echo $r["kotaID"]; ?>"><?php echo $r["kotaNama"]; ?></option>
-                                        <?php endforeach;?>
-                                    </select>
+                <form id="myform" class="form-horizontal" method="post" action="<?php echo site_url($activeModule.'_karyawan/'.$mode); ?>">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="0">
+                            <span class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">NO REGISTRASI</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" value="<?php echo $noregistrasikaryawan;?>" id="noregistrasikaryawan" name="noregistrasikaryawan"/>
+                                    </div>
                                 </div>
-                            </div>
-							</span>
-						</div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">NIP</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="nip" name="nip"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">NPWP</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="npwp" name="npwp"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">No. KTP/SIM</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="noKTPSIM" name="noKTPSIM"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">No. JAMSOSTEK</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="noJamsostek" name="noJamsostek"/>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Nama Lengkap</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="namaLengkap" name="namaLengkap"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Nama Panggilan</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" id="namaPanggilan" name="namaPanggilan"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="datepicker">Tanggal Lahir</label>
+                                    <div class="controls">
+                                            <input type="text" class="datepick" id="tanggalLahir" name="tanggalLahir">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Tempat Lahir (Kota)</label>
+                                    <div class="controls">
+                                        <select name="tempatLahir" id="tempatLahir">
+                                            <option value="*" selected>Pilih Kota</option>
+                                            <?php 
+                                            $conn = new Citdbase();
+                                            $listKota = $conn->CIT_SELECT("tref_city");
+                                            foreach ($listKota as $r): 
+                                            ?>
+                                            <option value="<?php echo $r["kotaID"]; ?>"><?php echo $r["kotaNama"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Agama</label>
+                                    <div class="controls">
+                                        <select name="agama" id="agama">
+                                            <option value="islam" selected>Islam</option>
+                                            <option value="protestan" >Protestan</option>
+                                            <option value="katholik" >Katholik</option>
+                                            <option value="hindu" >Hindu</option>
+                                            <option value="budha" >Budha</option>
+                                            <option value="kepercayaan lain" >Kepercayaan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Jenis Kelamin</label>
+                                    <div class="controls">
+                                        <select name="gender" id="gender">
+                                            <option value="L" selected>Laki-Laki</option>
+                                            <option value="P" >Perempuan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
 						
-						<div class="tab-pane" id="1">
-							
-						</div>
+                        <div class="tab-pane" id="1">
+                            <span class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Alamat</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12 input-square" id="alamat" name="alamat"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Propinsi</label>
+                                    <div class="controls">
+                                        <select name="propinsiID" id="propinsiID">
+                                            <option value="*" selected>Pilih Propinsi</option>
+                                            <?php foreach ($listPropinsi as $r): ?>
+                                                <option value="<?php echo $r["propinsiID"]; ?>"><?php echo $r["propinsiNama"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Kota</label>
+                                    <div class="controls">
+                                        <select name="kotaID" id="kotaID">
+                                            <option value="*" selected>Pilih Kota</option>
+                                            <?php foreach ($listKota as $r): ?>
+                                                <option value="<?php echo $r["kotaID"]; ?>"><?php echo $r["kotaNama"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Kodepos </label>
+                                    <div class="controls">
+                                        <input type="text" name="kodePos" id="kodePos" class="span2 input-square"/>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">No Telepon</label>
+                                    <div class="controls">
+                                        <input type="text" name="nomortelepon" id="nomortelepon" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Email</label>
+                                    <div class="controls">
+                                        <input type="text" name="email" id="email" class="span2 input-square"/>
+                                    </div>
+                                </div>
+
+                            </span>
+                        </div>
 						
 						<div class="tab-pane" id="2">
 							<span class="span6">
