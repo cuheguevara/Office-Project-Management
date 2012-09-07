@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Human_resources_jabatan extends CI_Controller {
+class Human_resources_department extends CI_Controller {
     
     private $arrMenuConfig;
     private $arrController;
@@ -48,7 +48,7 @@ class Human_resources_jabatan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_jabatan", "jabatanID", "J-", 3)
+            , 'departemenID'=>  $this->conn->CIT_AUTONUMBER("tref_departemen", "departemenID", "D-", 3)
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -59,7 +59,7 @@ class Human_resources_jabatan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_jabatan", "jabatanID", "J-", 3)
+            , 'departemenID'=>  $this->conn->CIT_AUTONUMBER("tref_departemen", "departemenID", "D-", 3)
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -68,15 +68,15 @@ class Human_resources_jabatan extends CI_Controller {
         $this->activeModule   = $this->session->userdata('setmodule');
         $requestID      = $this->uri->segment(4);
         
-        $PropID  = explode(',',$_REQUEST["jabatanID"]);
+        $PropID  = explode(',',$_REQUEST["departemenID"]);
         for ($i = 0;$i<count($PropID);$i++){
-            $hasil = $this->conn->CIT_DELETE("normal", "tref_jabatan", array("jabatanID" => $PropID[$i]));
+            $hasil = $this->conn->CIT_DELETE("normal", "tref_departemen", array("departemenID" => $PropID[$i]));
         }
         
         if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+            redirect($this->activeModule.'_department/msg/success', 'refresh');
         }  else {
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_department/msg/fail', 'refresh');
         }
     }
     
@@ -84,27 +84,27 @@ class Human_resources_jabatan extends CI_Controller {
         $this->activeModule   = $this->session->userdata('setmodule');
         $requestID      = $this->uri->segment(4);
         
-        $hasil = $this->conn->CIT_DELETE("normal", "tref_jabatan", array("jabatanID" => $requestID));
+        $hasil = $this->conn->CIT_DELETE("normal", "tref_departemen", array("departemenID" => $requestID));
         
         if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+            redirect($this->activeModule.'_department/msg/success', 'refresh');
         }  else {
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_department/msg/fail', 'refresh');
         }
     }
 
     public function entry()
     {
         $this->activeModule   = $this->session->userdata('setmodule');
-        $hasil = $this->conn->CIT_INSERT("tref_jabatan", array(
-            "jabatanID" => $_POST["jabatanID"],
-            "jabatanNama" => $_POST["jabatanNama"]
+        $hasil = $this->conn->CIT_INSERT("tref_departemen", array(
+            "departemenID" => $_POST["departemenID"],
+            "departemenNama" => $_POST["departemenNama"]
         ));
         
         if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+            redirect($this->activeModule.'_department/msg/success', 'refresh');
         }  else {
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_department/msg/fail', 'refresh');
         }
     }
     
@@ -112,34 +112,34 @@ class Human_resources_jabatan extends CI_Controller {
     {
         $this->activeModule   = $this->session->userdata('setmodule');
         
-        $hasil = $this->conn->CIT_UPDATE("tref_jabatan", array(
-            "jabatanNama" => $_POST["jabatanNama"]
-        ),array("jabatanID" => $_POST["jabatanID"]));
+        $hasil = $this->conn->CIT_UPDATE("tref_departemen", array(
+            "departemenNama" => $_POST["departemenNama"]
+        ),array("departemenID" => $_POST["departemenID"]));
         
         if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+            redirect($this->activeModule.'_department/msg/success', 'refresh');
         }  else {
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_department/msg/fail', 'refresh');
         }
 
     }
     
     function grid_entries()
     {
-        $query  = $this->conn->CIT_SELECT('tref_jabatan');
+        $query  = $this->conn->CIT_SELECT('tref_departemen');
         
         $table = "";
         $n = 1;
         foreach ($query as $r){
         $table .= "<tr>";
-            $table .= "<td class=\"table-checkbox\"><input type=\"checkbox\" name=\"fieldID[]\" id=\"fieldID[]\" value=\"".$r["jabatanID"]."\" class=\"selectable-checkbox\"></td>";
+            $table .= "<td class=\"table-checkbox\"><input type=\"checkbox\" name=\"fieldID[]\" id=\"fieldID[]\" value=\"".$r["departemenID"]."\" class=\"selectable-checkbox\"></td>";
             $table .= "<td>".$n."</td>";
-            $table .= "<td>".$r["jabatanNama"]."</td>";
+            $table .= "<td>".$r["departemenNama"]."</td>";
             $table .= "<td>";
-            $table .= "<a onclick=\"edit('".$r["jabatanID"]."','".$r["jabatanNama"]."')\" class=\"btn btn-mini btn-square tip\" data-original-title=\"Edit\">";
+            $table .= "<a onclick=\"edit('".$r["departemenID"]."','".$r["departemenNama"]."')\" class=\"btn btn-mini btn-square tip\" data-original-title=\"Edit\">";
             $table .= "<img alt=\"\" src=\"".base_url().ASSETS_IMAGES."icons/fugue/arrow-270.png\"/>";
             $table .= "</a>";
-            $table .= "<a class=\"btn btn-mini btn-square tip\" href=\"".site_url($this->arrController."/hapus/id/".$r["jabatanID"])."\" data-original-title=\"Hapus\">";
+            $table .= "<a class=\"btn btn-mini btn-square tip\" href=\"".site_url($this->arrController."/hapus/id/".$r["departemenID"])."\" data-original-title=\"Hapus\">";
             $table .= "<img alt=\"\" src=\"".base_url().ASSETS_IMAGES."icons/fugue/cross.png\"/>";
             $table .= "</a>";
             $table .= "</td>";

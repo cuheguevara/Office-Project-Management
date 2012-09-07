@@ -2,7 +2,7 @@
     <div class="span12">
         <div class="box">
             <div class="box-head">
-                <h3>MODUL APLIKASI DATA REFERENSI</h3>
+                <h3>MODUL APLIKASI DATA KEPEGAWAIAN</h3>
             </div>
             <div class="box-content">
                 <div class="alert alert-info alert-block">
