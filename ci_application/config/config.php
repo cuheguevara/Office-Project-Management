@@ -15,7 +15,7 @@
 |
 */
 $config['modules_locations'] = array(APPPATH.'modules/' => '../modules/',);
-$config['base_url']	= "http://".$_SERVER['SERVER_NAME']."/ci_pom/";
+$config['base_url']	= "http://".$_SERVER['SERVER_NAME']."/Office-Project-Management/";
 
 /*
 |--------------------------------------------------------------------------
