@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Human_resources_jabatan extends CI_Controller {
+class Human_resources_karyawan extends CI_Controller {
     
     private $arrMenuConfig;
     private $arrController;
@@ -14,11 +14,15 @@ class Human_resources_jabatan extends CI_Controller {
         $tmpController      = explode("_", $this->uri->segment(1)) ; 
         $controllerSelected = $tmpController[2];
         $this->activeModule = $this->session->userdata('setmodule');
-        $modulID            = $this->conn->CIT_GETSOMETHING("modulID", 'conf_modul', array('modulPage_Form_Controller'=>$this->activeModule));
+        $modulID            = $this->conn->CIT_GETSOMETHING("modulID"
+        		, 'conf_modul'
+        		, array('modulPage_Form_Controller'=>$this->activeModule));
         
         $this->selectedSubModule = $controllerSelected;
         
-        $submodulID         = $this->conn->CIT_GETSOMETHING("submodulID", 'conf_menu', array('controller'=>$controllerSelected));
+        $submodulID         = $this->conn->CIT_GETSOMETHING("submodulID"
+        		, 'conf_menu'
+        		, array('controller'=>$controllerSelected));
         $submodulNama       = $this->conn->CIT_GETSOMETHING("submodulNama", 'conf_submodul', array('modulID'=>$modulID,'submodulID'=>$submodulID));
          
         $this->arrMenuConfig = array(
@@ -48,7 +52,7 @@ class Human_resources_jabatan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_jabatan", "jabatanID", "J-", 3)
+            , 'jabatanID'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "K".date("ymd"), 2)
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }

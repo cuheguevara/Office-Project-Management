@@ -10,7 +10,7 @@
             <a href="<?php echo site_url($modulActive); ?>" class='light'>
                         <div class="ico"><i class="icon-home icon-white"></i></div>
                         Modul <?php echo ucfirst($modulActive); ?>
-                        <span class="label label-warning">10</span>
+                        <!-- <span class="label label-warning">10</span>// -->
                 </a>
         </li>
         <?php
