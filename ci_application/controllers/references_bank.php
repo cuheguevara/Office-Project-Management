@@ -4,7 +4,7 @@ class References_bank extends CI_Controller {
     
     private $arrMenuConfig;
     private $arrController;
-
+    private $conn;
 
     function __construct(){
     	parent::__construct();
@@ -145,7 +145,25 @@ class References_bank extends CI_Controller {
         }
         return array('content'=>$table);
     }
-    
+    public function entryCabang(){
+    	$this->conn->CIT_INSERT("tref_bank_cabang",array(
+    				"bankID" =>$_REQUEST["modalBankID"]
+    			,"bankID" =>$_REQUEST["modalBankID"]
+    			
+  `cabangID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cabangNama` varchar(150) DEFAULT NULL,
+  `alamat` varchar(150) DEFAULT NULL,
+  `propinsiID` varchar(4) DEFAULT NULL,
+  `kotaID` int(10) DEFAULT NULL,
+  `kodePos` varchar(6) DEFAULT NULL,
+  `namaKontak` varchar(50) DEFAULT NULL,
+  `telepon` varchar(150) DEFAULT NULL,
+  `fax` varchar(150) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL,"=>""
+    			));
+    	
+    }
 }
 
 /* End of file welcome.php */

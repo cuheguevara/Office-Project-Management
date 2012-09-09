@@ -59,7 +59,7 @@ class References_instansi extends CI_Controller {
        return $this->conn->CIT_SELECT('tref_city');
     }
     public function loadByPropinsi(){
-       $sql = $this->conn->CIT_SELECT('tref_city','equal', array('propinsiID'=>$_POST["propinsiID"]));
+       $sql = $this->conn->CIT_SELECT('tref_city','equal', array('propinsiID'=>$_REQUEST["propinsiID"]));
        $result = "";
        foreach ($sql as $value) {
            $result  .="<option value=\"".$value["kotaID"]."\">".$value["kotaNama"]."</option>";

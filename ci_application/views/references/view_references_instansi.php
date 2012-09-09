@@ -17,7 +17,6 @@
                 $.getJSON("references_instansi/loadByPropinsi", {
                     propinsiID : $(this).val()
                 }, function(e){
-                    //$('<option value=\'*\' selected>*</option>').appendTo("#kode_stok");
                     $("#kotaID").html("");
                     $(e.listKota).appendTo("#kotaID");
                 }, 'json');

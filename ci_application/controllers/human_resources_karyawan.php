@@ -53,8 +53,11 @@ class Human_resources_karyawan extends CI_Controller {
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
             , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
+            , 'nip'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "NIP".date("ymd"), 3)
             , 'listKota'=>  $this->loadKota() 
             , 'listPropinsi'=> $this->loadPrinsi()
+            , 'listBank'=> $this->loadBank()
+            , 'loadBankCabang'=> $this->loadBankCabang()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -69,6 +72,8 @@ class Human_resources_karyawan extends CI_Controller {
             , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
             , 'listKota'=>  $this->loadKota() 
             , 'listPropinsi'=> $this->loadPrinsi()
+            , 'listBank'=> $this->loadBank()
+            , 'loadBankCabang'=> $this->loadBankCabang()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -105,6 +110,12 @@ class Human_resources_karyawan extends CI_Controller {
     public function loadPrinsi(){
        return $this->conn->CIT_SELECT('tref_propinsi');
     }
+    public function loadBank(){
+       return $this->conn->CIT_SELECT('tref_bank');
+    }
+    public function loadBankCabang(){
+       return $this->conn->CIT_SELECT('tref_bank_cabang');
+    }
     
     public function loadKota(){
        return $this->conn->CIT_SELECT('tref_city');
@@ -114,8 +125,8 @@ class Human_resources_karyawan extends CI_Controller {
         $this->activeModule   = $this->session->userdata('setmodule');
         $propinsiID = $this->conn->CIT_GETSOMETHING("propinsiID", "tref_city", array("kotaID"=>$_POST["kotaID"]));
         $tLahir = explode("/", $_POST["tanggalLahir"]);
-        $fieldInsert = array(
-            "nip"=>$_POST["nip"]
+        $bankID = $_POST["bankID"];
+        $fieldDataPribadi = array("nip"=>$_POST["nip"]
             , "noregistrasikaryawan"=>$_POST["noregistrasikaryawan"]
             , "npwp"=>$_POST["npwp"]
             , "noKTPSIM"=>$_POST["noKTPSIM"]
@@ -126,8 +137,24 @@ class Human_resources_karyawan extends CI_Controller {
             , "tempatLahir"=>$_POST["tempatLahir"]
             , "gender"=>$_POST["gender"]
             , "agama"=>$_POST["agama"]);
+        
+        $fieldDataKontak = array("alamat"=>$_POST["alamat"]
+            , "propinsiID"=>$_POST["propinsiID"]
+            , "kotaID"=>$_POST["kotaID"]
+            , "kodePos"=>$_POST["kodePos"]
+            , "nomortelepon"=>$_POST["nomortelepon"]
+            , "email"=>$_POST["email"]
+            );
+        
+        $fieldDataBank = array("accRekening"=>$_POST["accRekening"]
+            , "cabangID"=>$_POST["cabangID"]
+            , "bankID"=>$_POST["bankID"]
+            , "email"=>$_POST["email"]
+            );
+        $dataInsert = array_merge($fieldDataPribadi,$fieldDataKontak,$fieldDataBank);    
         try{
-            $hasil = $this->conn->CIT_INSERT('tref_karyawan', $fieldInsert);
+            $hasil = $this->conn->CIT_INSERT('tref_karyawan', $dataInsert);
+            
             if ($hasil == "1"){
                 redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
             }  else {

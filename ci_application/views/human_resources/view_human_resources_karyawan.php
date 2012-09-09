@@ -1,7 +1,52 @@
 <?php
     $activeModule = $this->session->userdata('setmodule');
 ?>
+<script src="<?php echo base_url().ASSETS_JS; ?>functionset.js"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+    	$("#bankID").change(function(){
+    		if ($(this).val()=="*"){
+                $.post("json_support/loadBankCabangDefault", {
+
+                }, function(e){
+                    $("#cabangID").html("");
+                    $(e).appendTo("#cabangID");
+                    $('<option value=\'*\' selected> - </option>').appendTo("#cabangID");
+                });
+
+            }else{
+                $.post("json_support/loadCabangByBank", {
+                	bankID : $(this).val()
+                }, function(e){
+                    if (e.list=="kosong"){
+                    	$('#myModal').modal('show');    
+                    	$("#cabangID").html("");
+                    	$('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+                    }else{
+                    	
+                    	$("#cabangID").html("");
+                        $(e.list).appendTo("#cabangID");
+                        $('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+
+                    }
+                    
+                },"json");
+
+            }
+    	});
+       //$("#bankID").change(function(){
+           // 
+       // });
+    });
+
+    function simpanCabang(){
+        $.post("references_bank/entryCabang",{
+            },function(e){
+                });
+    	$("#cabangID").html("");
+    	$('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+    }
+    
     function edit(id,nama){
         $("#jabatanID").val(id);
         $("#jabatanNama").val(nama);
@@ -59,20 +104,110 @@
                     endif;
                 ?>
                 <!-- FORMS  -->
-                <form id="myform" class="form-horizontal" method="post" action="<?php echo site_url($activeModule.'_karyawan/'.$mode); ?>">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="0">
-                            <span class="span6">
-                                <div class="control-group">
-                                    <label class="control-label" for="basicround">NO REGISTRASI</label>
+                <div class="modal hide" id="myModal">
+							  <div class="modal-header">
+							    <button type="button" class="close" data-dismiss="modal">×</button>
+							    <h3>Success</h3>
+							  </div>
+							  <div class="modal-body">
+							    <span class="span12">
+							    	<div class="control-group">
+	                                    <label for="select" class="control-label">Bank</label>
+	                                    <div class="controls">
+	                                        <select name="modalBankID" id="modalBankID">
+	                                            <option value="*" selected>Pilih Bank</option>
+	                                            <?php foreach ($listBank as $r): ?>
+	                                                <option value="<?php echo $r["bankID"]; ?>"><?php echo $r["bankName"]; ?>( <?php echo $r["bankFullName"]; ?> )</option>
+	                                            <?php endforeach;?>
+	                                        </select>
+	                                    </div>
+	                                </div>
+	                                <div class="control-group">
+	                                    <label class="control-label" for="basicround">Nama Cabang</label>
+	                                    <div class="controls">
+	                                        <input type="text" class="input-square" id="cabangNama" name="cabangNama"/>
+	                                    </div>
+	                                </div>
+	                                <div class="control-group">
+	                                    <label class="control-label" for="basicround">Alamat</label>
+	                                    <div class="controls">
+	                                        <input type="text" class="input-square" id="modalAlamat" name="modalAlamat"/>
+	                                    </div>
+	                                </div>
+	                                <div class="control-group">
+                                    <label for="select" class="control-label">Propinsi</label>
                                     <div class="controls">
-                                        <input type="text" class="input-square" value="<?php echo $noregistrasikaryawan;?>" id="noregistrasikaryawan" name="noregistrasikaryawan"/>
+                                        <select name="modalPropinsiID" id="modalPropinsiID">
+                                            <option value="*" selected>Pilih Propinsi</option>
+                                            <?php foreach ($listPropinsi as $r): ?>
+                                                <option value="<?php echo $r["propinsiID"]; ?>"><?php echo $r["propinsiNama"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label" for="basicround">NIP</label>
+                                    <label for="select" class="control-label">Kota</label>
                                     <div class="controls">
-                                        <input type="text" class="input-square" id="nip" name="nip"/>
+                                        <select name="modalKotaID" id="modalKotaID">
+                                            <option value="*" selected>Pilih Kota</option>
+                                            <?php foreach ($listKota as $r): ?>
+                                                <option value="<?php echo $r["kotaID"]; ?>"><?php echo $r["kotaNama"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Kodepos </label>
+                                    <div class="controls">
+                                        <input type="text" name="modalKodePos" id="modalKodePos" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Nama Kontak </label>
+                                    <div class="controls">
+                                        <input type="text" name="modalNamaKontak" id="modalNamaKontak" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Telepon</label>
+                                    <div class="controls">
+                                        <input type="text" name="modalTelepon" id="modalTelepon" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Fax</label>
+                                    <div class="controls">
+                                        <input type="text" name="modalFax" id="modalFax" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Email</label>
+                                    <div class="controls">
+                                        <input type="text" name="modalEmail" id="modalEmail" class="input-square"/>
+                                    </div>
+                                </div>	   	                                
+							    </span>
+							  </div>
+							  <div class="modal-footer">
+							  	<a href="simpanCabang();" class="btn btn-primary" data-dismiss="modal">Simpan</a>
+							    <a href="#" class="btn btn-primary" data-dismiss="modal">Batal</a>
+							  </div>
+							</div>
+                <form id="myform" class="form-horizontal" method="post" action="<?php echo site_url($activeModule.'_karyawan/'.$mode); ?>">
+                    <div class="tab-content">
+                        
+                        <div class="tab-pane active" id="0">
+                            <span class="span6">
+                                <div class="control-group">
+                                    <label class="control-label" for="disabled">NO REGISTRASI</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" readonly=""  value="<?php echo $noregistrasikaryawan;?>" id="noregistrasikaryawan" name="noregistrasikaryawan"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="disabled">NIP</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-square" readonly="" value="<?php echo $nip;?>" id="nip" name="nip"/>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -197,13 +332,48 @@
                                         <input type="text" name="nomortelepon" id="nomortelepon" class="input-square"/>
                                     </div>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="basicround">Email</label>
+                                <div class="control-group error">
+                                    <label class="control-label" for="email1">Email</label>
                                     <div class="controls">
-                                        <input type="text" name="email" id="email" class="span2 input-square"/>
+                                            <input type="text" class="email required ui-wizard-content ui-helper-reset ui-state-default" id="email" name="email"/><label for="email1" generated="true" class="error">Please enter a valid email address.</label>
                                     </div>
                                 </div>
-
+                                <div class="control-group"><hr/></div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Bank</label>
+                                    <div class="controls">
+                                        <select name="bankID" id="bankID">
+                                            <option value="*" selected>Pilih Bank</option>
+                                            <?php foreach ($listBank as $r): ?>
+                                                <option value="<?php echo $r["bankID"]; ?>"><?php echo $r["bankName"]; ?>( <?php echo $r["bankFullName"]; ?> )</option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="select" class="control-label">Bank Cabang</label>
+                                    <div class="controls" id="bankCabangBaru">
+                                        <select name="cabangID" id="cabangID">
+                                            <option value="*" selected>Pilih Cabang</option>
+                                            <?php foreach ($loadBankCabang as $r): ?>
+                                                <option value="<?php echo $r["cabangID"]; ?>"><?php echo $r["cabangNama"]; ?> - <?php echo $r["alamat"]; ?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">Nama Account</label>
+                                    <div class="controls">
+                                        <input type="text" name="accRekening" id="accRekening" class="input-square"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="basicround">No Rekening</label>
+                                    <div class="controls">
+                                        <input type="text" name="noRekening" id="noRekening" class="input-square"/>
+                                    </div>
+                                </div>
                             </span>
                         </div>
 						
