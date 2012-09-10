@@ -41,10 +41,31 @@
 
     function simpanCabang(){
         $.post("references_bank/entryCabang",{
+            modalBankID : $("#modalBankID").val()
+            , cabangNama : $("#cabangNama").val()
+            , modalAlamat : $("#modalAlamat").val()
+            , modalPropinsiID : $("#modalPropinsiID").val()
+            , modalKotaID : $("#modalKotaID").val()
+            , modalKodePos : $("#modalKodePos").val()
+            , modalNamaKontak : $("#modalNamaKontak").val()
+            , modalTelepon : $("#modalTelepon").val()
+            , modalFax : $("#modalFax").val()
+            , modalEmail : $("#modalEmail").val()
             },function(e){
-                });
-    	$("#cabangID").html("");
-    	$('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+                    if (e == "True"){
+                        $.post("json_support/loadCabangByBank", {
+                            bankID : $("#bankID").val()
+                    }, function(e){
+                            $("#cabangID").html("");
+                            $(e.list).appendTo("#cabangID");
+                            $('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+                    },"json");
+                    $('#myModal').modal('hide');
+                }else{
+                    $("#cabangID").html("");
+                    $('<option value=\'*\' selected>Pilih Cabang</option>').appendTo("#cabangID");
+                }
+            });
     }
     
     function edit(id,nama){
@@ -54,20 +75,21 @@
     }
     function deleteChecked(){
         var checked = []
-        $("input[name='field[]']:checked").each(function ()
+        $("input[name='fieldID[]']:checked").each(function ()
         {
             checked.push(parseInt($(this).val()));
         });
         $.ajax({
             type: "POST",
-            url: '<?php echo site_url($activeModule.'_jabatan/hapusMultiple'); ?>',
+            url: '<?php echo site_url($activeModule.'_karyawan/hapusMultiple'); ?>',
             dataType: 'html',
-            data: 'jabatanID='+checked,
+            data: 'nip='+checked,
             success: function(data){
-                if (data=="OK"){
-                    window.location.href = "<?php echo site_url("references_jabatan/msg/success"); ?>";
+                
+                if (data==1){
+                    window.location.href = "<?php echo site_url($activeModule."_karyawan/msg/success"); ?>";
                 }else{
-                    window.location.href = "<?php echo site_url("references_jabatan/msg/fail"); ?>";
+                    window.location.href = "<?php echo site_url($activeModule."_karyawan/msg/fail"); ?>";
                 }
                     
             }
@@ -189,7 +211,7 @@
 							    </span>
 							  </div>
 							  <div class="modal-footer">
-							  	<a href="simpanCabang();" class="btn btn-primary" data-dismiss="modal">Simpan</a>
+                                                              <a href="#" onclick="simpanCabang();" class="btn btn-primary" >Simpan</a>
 							    <a href="#" class="btn btn-primary" data-dismiss="modal">Batal</a>
 							  </div>
 							</div>
@@ -403,7 +425,7 @@
     <div class="span12">
         <div class="box">
             <div class="box-head">
-                <h3>Data Provinsi</h3>
+                <h3>Data Karyawan</h3>
                 <div class="actions">
                     <ul>
                         <li>
@@ -424,7 +446,10 @@
                             <tr>
                                 <th class="table-checkbox"><input type="checkbox" class="sel_all"></th>
                                 <th>No</th>
+                                <th>NIP</th>
                                 <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>Email</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>

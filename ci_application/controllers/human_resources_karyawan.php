@@ -70,6 +70,7 @@ class Human_resources_karyawan extends CI_Controller {
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
             , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
+            , 'nip'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "NIP".date("ymd"), 3)
             , 'listKota'=>  $this->loadKota() 
             , 'listPropinsi'=> $this->loadPrinsi()
             , 'listBank'=> $this->loadBank()
@@ -81,24 +82,19 @@ class Human_resources_karyawan extends CI_Controller {
     public function hapusMultiple(){
         $this->activeModule   = $this->session->userdata('setmodule');
         $requestID      = $this->uri->segment(4);
-        
-        $PropID  = explode(',',$_REQUEST["jabatanID"]);
+        echo $requestID;
+        $PropID  = explode(',',$_REQUEST["nip"]);
         for ($i = 0;$i<count($PropID);$i++){
-            $hasil = $this->conn->CIT_DELETE("normal", "tref_jabatan", array("jabatanID" => $PropID[$i]));
+            $hasil = $this->conn->CIT_DELETE("normal", "tref_karyawan", array("nip" => $PropID[$i]));
         }
-        
-        if ($hasil == "1"){
-            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
-        }  else {
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
-        }
+        echo $hasil;
     }
     
     public function hapus(){
         $this->activeModule   = $this->session->userdata('setmodule');
         $requestID      = $this->uri->segment(4);
         
-        $hasil = $this->conn->CIT_DELETE("normal", "tref_jabatan", array("jabatanID" => $requestID));
+        $hasil = $this->conn->CIT_DELETE("normal", "tref_karyawan", array("nip" => $requestID));
         
         if ($hasil == "1"){
             redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
@@ -147,6 +143,7 @@ class Human_resources_karyawan extends CI_Controller {
             );
         
         $fieldDataBank = array("accRekening"=>$_POST["accRekening"]
+            , "noRekening"=>$_POST["noRekening"]
             , "cabangID"=>$_POST["cabangID"]
             , "bankID"=>$_POST["bankID"]
             , "email"=>$_POST["email"]
@@ -156,12 +153,12 @@ class Human_resources_karyawan extends CI_Controller {
             $hasil = $this->conn->CIT_INSERT('tref_karyawan', $dataInsert);
             
             if ($hasil == "1"){
-                redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+                redirect($this->activeModule.'_karyawan/msg/success', 'refresh');
             }  else {
-                redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+                redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
             }
         }catch(Exception $e){
-            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
         }
         
     }
@@ -184,20 +181,25 @@ class Human_resources_karyawan extends CI_Controller {
     
     function grid_entries()
     {
-        $query  = $this->conn->CIT_SELECT('tref_jabatan');
+        $query  = $this->conn->CIT_SELECT('view_karyawan');
         
         $table = "";
         $n = 1;
+        
         foreach ($query as $r){
         $table .= "<tr>";
-            $table .= "<td class=\"table-checkbox\"><input type=\"checkbox\" name=\"fieldID[]\" id=\"fieldID[]\" value=\"".$r["jabatanID"]."\" class=\"selectable-checkbox\"></td>";
+            $table .= "<td class=\"table-checkbox\"><input type=\"checkbox\" name=\"fieldID[]\" id=\"fieldID[]\" value=\"".$r["nip"]."\" class=\"selectable-checkbox\"></td>";
             $table .= "<td>".$n."</td>";
-            $table .= "<td>".$r["jabatanNama"]."</td>";
+            $table .= "<td>".$r["nip"]."</td>";
+            $table .= "<td>".$r["namaLengkap"]."</td>";
+            $table .= "<td>".$r["alamat"].", ".$r["kota"]." - ".$r["propinsi"]."</td>";
+            $table .= "<td>".$r["email"]."</td>";
+            
             $table .= "<td>";
-            $table .= "<a onclick=\"edit('".$r["jabatanID"]."','".$r["jabatanNama"]."')\" class=\"btn btn-mini btn-square tip\" data-original-title=\"Edit\">";
+            $table .= "<a onclick=\"edit('".$r["nip"]."')\" class=\"btn btn-mini btn-square tip\" data-original-title=\"Edit\">";
             $table .= "<img alt=\"\" src=\"".base_url().ASSETS_IMAGES."icons/fugue/arrow-270.png\"/>";
             $table .= "</a>";
-            $table .= "<a class=\"btn btn-mini btn-square tip\" href=\"".site_url($this->arrController."/hapus/id/".$r["jabatanID"])."\" data-original-title=\"Hapus\">";
+            $table .= "<a class=\"btn btn-mini btn-square tip\" href=\"".site_url($this->arrController."/hapus/id/".$r["nip"])."\" data-original-title=\"Hapus\">";
             $table .= "<img alt=\"\" src=\"".base_url().ASSETS_IMAGES."icons/fugue/cross.png\"/>";
             $table .= "</a>";
             $table .= "</td>";

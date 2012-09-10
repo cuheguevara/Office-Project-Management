@@ -146,22 +146,30 @@ class References_bank extends CI_Controller {
         return array('content'=>$table);
     }
     public function entryCabang(){
-    	$this->conn->CIT_INSERT("tref_bank_cabang",array(
+       $insert = array(
     				"bankID" =>$_REQUEST["modalBankID"]
-    			,"bankID" =>$_REQUEST["modalBankID"]
-    			
-  `cabangID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `cabangNama` varchar(150) DEFAULT NULL,
-  `alamat` varchar(150) DEFAULT NULL,
-  `propinsiID` varchar(4) DEFAULT NULL,
-  `kotaID` int(10) DEFAULT NULL,
-  `kodePos` varchar(6) DEFAULT NULL,
-  `namaKontak` varchar(50) DEFAULT NULL,
-  `telepon` varchar(150) DEFAULT NULL,
-  `fax` varchar(150) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `keterangan` varchar(100) DEFAULT NULL,"=>""
-    			));
+    			,"cabangNama" =>$_REQUEST["cabangNama"]
+    			,"alamat" =>$_REQUEST["modalAlamat"]
+    			,"propinsiID" =>$_REQUEST["modalPropinsiID"]
+    			,"kotaID" =>$_REQUEST["modalKotaID"]
+    			,"kodePos" =>$_REQUEST["modalKodePos"]
+    			,"namaKontak" =>$_REQUEST["modalNamaKontak"]
+    			,"telepon" =>$_REQUEST["modalTelepon"]
+    			,"fax" =>$_REQUEST["modalFax"]
+    			,"email" =>$_REQUEST["modalEmail"]
+    			); 
+   
+        try{
+            $hasil = $this->conn->CIT_INSERT("tref_bank_cabang",$insert);
+            
+            if ($hasil == "1"){
+                echo "True";
+            }  else {
+                echo "False";
+            }
+    	}catch(Exception $e){
+            echo "False";
+        }
     	
     }
 }
