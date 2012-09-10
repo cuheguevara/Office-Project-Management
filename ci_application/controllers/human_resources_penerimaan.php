@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Human_resources_karyawan extends CI_Controller {
+class Human_resources_penerimaan extends CI_Controller {
     
     private $arrMenuConfig;
     private $arrController;
@@ -45,42 +45,6 @@ class Human_resources_karyawan extends CI_Controller {
         }
     }
 
-    public function getKaryawan(){
-        $this->activeModule = $this->session->userdata('setmodule');
-        $table  = "tref_karyawan";
-        $nip                = $_POST["nip"];
-        $dataKaryawan       = array();
-        $konsidi            = array("nip"=>$nip);
-        $karyawan           = $this->conn->CIT_SELECT($table,"equal", $konsidi);
-        foreach ($karyawan as $row) {
-            array_push($dataKaryawan, array(
-                "nip" => $row["nip"]
-                ,"npwp" => $row["npwp"]
-                , "noKTPSIM" => $row["noKTPSIM"]
-                , "noJamsostek" => $row["noJamsostek"]
-                , "namaLengkap" => $row["namaLengkap"]
-                , "namaPanggilan" => $row["namaPanggilan"]
-                , "tanggalLahir" => date("m/d/Y", strtotime($row["tanggalLahir"]))
-                , "tempatLahir" => $row["tempatLahir"]
-                , "gender" => $row["gender"]
-                , "agama" => $row["agama"]
-                , "alamat" => $row["alamat"]
-                , "propinsiID" => $row["propinsiID"]
-                , "kotaID" => $row["kotaID"]
-                , "kodePos" => $row["kodePos"]
-                , "nomortelepon" => $row["nomortelepon"]
-                , "email" => $row["email"]
-                , "noregistrasikaryawan" => $row["noregistrasikaryawan"]
-                , "bankID" => $row["bankID"]
-                , "cabangID" => $row["cabangID"]
-                , "noRekening" => $row["noRekening"]
-                , "accRekening" => $row["accRekening"]
-                , "status" => $row["status"]
-            ));
-        }
-        echo json_encode($dataKaryawan);
-    }
-    
     public function index()
     {
         $this->activeModule = $this->session->userdata('setmodule');
@@ -202,46 +166,15 @@ class Human_resources_karyawan extends CI_Controller {
     public function update()
     {
         $this->activeModule   = $this->session->userdata('setmodule');
-        $propinsiID = $this->conn->CIT_GETSOMETHING("propinsiID", "tref_city", array("kotaID"=>$_POST["kotaID"]));
-        $tLahir = explode("/", $_POST["tanggalLahir"]);
-        $bankID = $_POST["bankID"];
-        $kondisi = array ("nip"=>$_POST["nip"], "noregistrasikaryawan"=>$_POST["noregistrasikaryawan"]);
-        $fieldDataPribadi = array(
-            "npwp"=>$_POST["npwp"]
-            , "noKTPSIM"=>$_POST["noKTPSIM"]
-            , "noJamsostek"=>$_POST["noJamsostek"]
-            , "namaLengkap"=>$_POST["namaLengkap"]
-            , "namaPanggilan"=>$_POST["namaPanggilan"]
-            , "tanggalLahir"=>date("Y-m-d", strtotime($_POST["tanggalLahir"]))
-            , "tempatLahir"=>$_POST["tempatLahir"]
-            , "gender"=>$_POST["gender"]
-            , "agama"=>$_POST["agama"]);
         
-        $fieldDataKontak = array("alamat"=>$_POST["alamat"]
-            , "propinsiID"=>$_POST["propinsiID"]
-            , "kotaID"=>$_POST["kotaID"]
-            , "kodePos"=>$_POST["kodePos"]
-            , "nomortelepon"=>$_POST["nomortelepon"]
-            , "email"=>$_POST["email"]
-            );
+        $hasil = $this->conn->CIT_UPDATE("tref_jabatan", array(
+            "jabatanNama" => $_POST["jabatanNama"]
+        ),array("jabatanID" => $_POST["jabatanID"]));
         
-        $fieldDataBank = array("accRekening"=>$_POST["accRekening"]
-            , "noRekening"=>$_POST["noRekening"]
-            , "cabangID"=>$_POST["cabangID"]
-            , "bankID"=>$_POST["bankID"]
-            , "email"=>$_POST["email"]
-            );
-        $dataUpdate = array_merge($fieldDataPribadi,$fieldDataKontak,$fieldDataBank);    
-        try{
-            $hasil = $this->conn->CIT_UPDATE('tref_karyawan', $dataUpdate,$kondisi);
-            
-            if ($hasil == "1"){
-                redirect($this->activeModule.'_karyawan/msg/success', 'refresh');
-            }  else {
-                redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
-            }
-        }catch(Exception $e){
-            redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
+        if ($hasil == "1"){
+            redirect($this->activeModule.'_jabatan/msg/success', 'refresh');
+        }  else {
+            redirect($this->activeModule.'_jabatan/msg/fail', 'refresh');
         }
 
     }

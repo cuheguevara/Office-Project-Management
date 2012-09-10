@@ -31,9 +31,12 @@
                     }
                     
                 },"json");
+
             }
     	});
-       
+       //$("#bankID").change(function(){
+           // 
+       // });
     });
 
     function simpanCabang(){
@@ -65,34 +68,10 @@
             });
     }
     
-    function edit(nip){
-        $.post("<?php echo site_url($activeModule.'_karyawan/getKaryawan'); ?>",{
-            nip : nip
-        },function(e){
-            $("#nip").val(e[0].nip)
-            $("#npwp").val(e[0].npwp)
-            $("#noKTPSIM").val(e[0].noKTPSIM)
-            $("#noJamsostek").val(e[0].noJamsostek)
-            $("#namaLengkap").val(e[0].namaLengkap)
-            $("#namaPanggilan").val(e[0].namaPanggilan)
-            $("#tanggalLahir").val(e[0].tanggalLahir)
-            $("#tempatLahir").val(e[0].tempatLahir)
-            $("#gender").val(e[0].gender)
-            $("#agama").val(e[0].agama)
-            $("#alamat").val(e[0].alamat)
-            $("#propinsiID").val(e[0].propinsiID)
-            $("#kotaID").val(e[0].kotaID)
-            $("#kodePos").val(e[0].kodePos)
-            $("#nomortelepon").val(e[0].nomortelepon)
-            $("#email").val(e[0].email)
-            $("#noregistrasikaryawan").val(e[0].noregistrasikaryawan)
-            $("#bankID").val(e[0].bankID)
-            $("#cabangID").val(e[0].cabangID)
-            $("#noRekening").val(e[0].noRekening)
-            $("#accRekening").val(e[0].accRekening)
-            $("#status").val(e[0].status)
-            $("#myform").attr("action","<?php echo site_url($activeModule.'_karyawan/update'); ?>");
-        },"json");
+    function edit(id,nama){
+        $("#jabatanID").val(id);
+        $("#jabatanNama").val(nama);
+        $("#myform").attr("action","<?php echo site_url($activeModule.'_jabatan/update'); ?>");
     }
     function deleteChecked(){
         var checked = []
