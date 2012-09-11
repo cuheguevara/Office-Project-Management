@@ -142,6 +142,9 @@ class Human_resources_karyawan extends CI_Controller {
     public function loadPrinsi(){
        return $this->conn->CIT_SELECT('tref_propinsi');
     }
+    public function loadKota(){
+       return $this->conn->CIT_SELECT('tref_city');
+    }
     public function loadBank(){
        return $this->conn->CIT_SELECT('tref_bank');
     }
@@ -149,9 +152,6 @@ class Human_resources_karyawan extends CI_Controller {
        return $this->conn->CIT_SELECT('tref_bank_cabang');
     }
     
-    public function loadKota(){
-       return $this->conn->CIT_SELECT('tref_city');
-    }
     public function entry()
     {
         $this->activeModule   = $this->session->userdata('setmodule');
