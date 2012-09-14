@@ -52,12 +52,9 @@ class Human_resources_penerimaan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
-            , 'nip'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "NIP".date("ymd"), 3)
-            , 'listKota'=>  $this->loadKota() 
-            , 'listPropinsi'=> $this->loadPrinsi()
-            , 'listBank'=> $this->loadBank()
-            , 'loadBankCabang'=> $this->loadBankCabang()
+            , 'listKaryawan'=>  $this->comboKaryawan() 
+            , 'listDepartment'=> $this->comboDepartemen()
+            , 'listJabatan'=> $this->comboJabatan()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
@@ -69,96 +66,126 @@ class Human_resources_penerimaan extends CI_Controller {
             'mainview' => $this->activeModule.'/view_'.$this->activeModule."_".$this->selectedSubModule
             , 'entries'=>array($this->grid_entries()) 
             , 'mode'=>'entry' 
-            , 'noregistrasikaryawan'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "noregistrasikaryawan", "REG".date("ymd"), 3)
-            , 'nip'=>  $this->conn->CIT_AUTONUMBER("tref_karyawan", "nip", "NIP".date("ymd"), 3)
-            , 'listKota'=>  $this->loadKota() 
-            , 'listPropinsi'=> $this->loadPrinsi()
-            , 'listBank'=> $this->loadBank()
-            , 'loadBankCabang'=> $this->loadBankCabang()
+            , 'listKaryawan'=>  $this->comboKaryawan() 
+            , 'listDepartment'=> $this->comboDepartemen()
+            , 'listJabatan'=> $this->comboJabatan()
         );
         $this->parser->parse(LAYOUT_PATH.'default',array_merge ($data,  $this->arrMenuConfig));
     }
     
-    public function hapusMultiple(){
-        $this->activeModule   = $this->session->userdata('setmodule');
-        $requestID      = $this->uri->segment(4);
-        echo $requestID;
-        $PropID  = explode(',',$_REQUEST["nip"]);
-        for ($i = 0;$i<count($PropID);$i++){
-            $hasil = $this->conn->CIT_DELETE("normal", "tref_karyawan", array("nip" => $PropID[$i]));
+    private function comboKaryawan()
+    {
+        $result = "";
+        $result .= "<option value=\"*\">Cari Karyawan</option>";
+        foreach($this->loadKaryawan() as $r){
+            $result .= "<option value=\"".$r["nip"]."\">".$r["namaLengkap"]."</option>";
         }
-        echo $hasil;
+        return $result;    
     }
     
-    public function hapus(){
-        $this->activeModule   = $this->session->userdata('setmodule');
-        $requestID      = $this->uri->segment(4);
-        
-        $hasil = $this->conn->CIT_DELETE("normal", "tref_karyawan", array("nip" => $requestID));
-        
-        if ($hasil == "1"){
-            redirect($this->activeModule.'_karyawan/msg/success', 'refresh');
-        }  else {
-            redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
+    private function comboDepartemen()
+    {
+        $result = "";
+        $result .= "<option value=\"*\">Cari Departemen</option>";
+        foreach($this->loadDepartemen() as $r){
+            $result .= "<option value=\"".$r["departemenID"]."\">".$r["departemenNama"]."</option>";
         }
-    }
-
-    public function loadPrinsi(){
-       return $this->conn->CIT_SELECT('tref_propinsi');
-    }
-    public function loadBank(){
-       return $this->conn->CIT_SELECT('tref_bank');
-    }
-    public function loadBankCabang(){
-       return $this->conn->CIT_SELECT('tref_bank_cabang');
+        return $result;    
     }
     
-    public function loadKota(){
-       return $this->conn->CIT_SELECT('tref_city');
+    private function comboJabatan()
+    {
+        $result = "";
+        $result .= "<option value=\"*\">Cari Jabatan</option>";
+        foreach($this->loadJabatan() as $r){
+            $result .= "<option value=\"".$r["jabatanID"]."\">".$r["jabatanNama"]."</option>";
+        }
+        return $result;    
     }
+    
+    public function loadKaryawan()
+    {
+       return $this->conn->CIT_SELECT('view_karyawan');
+    }
+    
+    public function loadDepartemen()
+    {
+       return $this->conn->CIT_SELECT('tref_departemen');
+    }
+    
+    public function loadJabatan()
+    {
+       return $this->conn->CIT_SELECT('tref_jabatan');
+    }
+    
+    public function getKaryawan(){
+        $this->activeModule = $this->session->userdata('setmodule');
+        $table  = "view_karyawan";
+        $nip                = $_POST["nip"];
+        $dataKaryawan       = array();
+        $konsidi            = array("nip"=>$nip);
+        $karyawan           = $this->conn->CIT_SELECT($table,"equal", $konsidi);
+        foreach ($karyawan as $row) {
+            array_push($dataKaryawan, array(
+                "nip" => $row["nip"]
+                ,"npwp" => $row["npwp"]
+                , "noKTPSIM" => $row["noKTPSIM"]
+                , "noJamsostek" => $row["noJamsostek"]
+                , "namaLengkap" => $row["namaLengkap"]
+                , "namaPanggilan" => $row["namaPanggilan"]
+                , "tanggalLahir" => date("m/d/Y", strtotime($row["tanggalLahir"]))
+                , "tempatLahir" => $row["tempatLahir"]
+                , "gender" => $row["gender"]
+                , "agama" => $row["agama"]
+                , "alamat" => $row["alamat"]
+                , "propinsiID" => $row["propinsiID"]
+                , "propinsi" => $row["propinsi"]
+                , "kotaID" => $row["kotaID"]
+                , "kota" => $row["kota"]
+                , "kodePos" => $row["kodePos"]
+                , "nomortelepon" => $row["nomortelepon"]
+                , "email" => $row["email"]
+                , "noregistrasikaryawan" => $row["noregistrasikaryawan"]
+                , "bankID" => $row["bankID"]
+                , "cabangID" => $row["cabangID"]
+                , "noRekening" => $row["noRekening"]
+                , "accRekening" => $row["accRekening"]
+                , "status" => $row["status"]
+            ));
+        }
+        echo json_encode($dataKaryawan);
+    }
+    
     public function entry()
     {
-        $this->activeModule   = $this->session->userdata('setmodule');
-        $propinsiID = $this->conn->CIT_GETSOMETHING("propinsiID", "tref_city", array("kotaID"=>$_POST["kotaID"]));
-        $tLahir = explode("/", $_POST["tanggalLahir"]);
-        $bankID = $_POST["bankID"];
-        $fieldDataPribadi = array("nip"=>$_POST["nip"]
-            , "noregistrasikaryawan"=>$_POST["noregistrasikaryawan"]
-            , "npwp"=>$_POST["npwp"]
-            , "noKTPSIM"=>$_POST["noKTPSIM"]
-            , "noJamsostek"=>$_POST["noJamsostek"]
-            , "namaLengkap"=>$_POST["namaLengkap"]
-            , "namaPanggilan"=>$_POST["namaPanggilan"]
-            , "tanggalLahir"=>date("Y-m-d", strtotime($_POST["tanggalLahir"]))
-            , "tempatLahir"=>$_POST["tempatLahir"]
-            , "gender"=>$_POST["gender"]
-            , "agama"=>$_POST["agama"]);
+        $this->activeModule     = $this->session->userdata('setmodule');
+        $periodeTahunAwal       = date("Y", strtotime($_POST["periodeAwal"]));
+        $periodeTahunAkhir      = date("Y", strtotime($_POST["periodeAkhir"]));
+        $periodeAwal            = date("Y-m-d", strtotime($_POST["periodeAwal"]));
+        $periodeAkhir           = date("Y-m-d", strtotime($_POST["periodeAkhir"]));
         
-        $fieldDataKontak = array("alamat"=>$_POST["alamat"]
-            , "propinsiID"=>$_POST["propinsiID"]
-            , "kotaID"=>$_POST["kotaID"]
-            , "kodePos"=>$_POST["kodePos"]
-            , "nomortelepon"=>$_POST["nomortelepon"]
-            , "email"=>$_POST["email"]
-            );
+        $fieldDataPribadi = array(
+            "menjabatID"=>  $this->conn->CIT_AUTONUMBER("t_menjabat", "menjabatID", "PA/".$periodeTahunAwal."/".$periodeTahunAkhir."/", "5")
+            ,"periodeAwal"=>$periodeAwal
+            , "periodeAkhir"=>$periodeAkhir
+            , "nip"=>$_POST["nip"]
+            , "departemenID"=>$_POST["departemenID"]
+            , "jabatanID"=>$_POST["jabatanID"]
+            , "periodeTahunAwal"=>$periodeTahunAwal
+            , "periodeTahunAkhir"=>$periodeTahunAkhir
+            , "besarTHP"=>$_POST["besarTHP"]
+            , "jenisGaji"=>$_POST["jenisGaji"]);
         
-        $fieldDataBank = array("accRekening"=>$_POST["accRekening"]
-            , "noRekening"=>$_POST["noRekening"]
-            , "cabangID"=>$_POST["cabangID"]
-            , "bankID"=>$_POST["bankID"]
-            , "email"=>$_POST["email"]
-            );
-        $dataInsert = array_merge($fieldDataPribadi,$fieldDataKontak,$fieldDataBank);    
         try{
-            $hasil = $this->conn->CIT_INSERT('tref_karyawan', $dataInsert);
+            $hasil = $this->conn->CIT_INSERT('t_menjabat', $fieldDataPribadi);
             
             if ($hasil == "1"){
-                redirect($this->activeModule.'_karyawan/msg/success', 'refresh');
+                redirect($this->activeModule.'_penerimaan/msg/success', 'refresh');
             }  else {
-                redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
+                redirect($this->activeModule.'_penerimaan/msg/fail', 'refresh');
             }
         }catch(Exception $e){
-            redirect($this->activeModule.'_karyawan/msg/fail', 'refresh');
+            redirect($this->activeModule.'_penerimaan/msg/fail', 'refresh');
         }
         
     }
